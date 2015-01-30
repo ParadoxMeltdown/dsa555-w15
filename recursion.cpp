@@ -36,21 +36,70 @@ int power(int b, int n){
 	return rc;
 }
 
+int powerR1(int b,int n){
+  int rc=1;
+  if(n>0){
+    rc=b*powerR1(b,n-1);
+  }
+  return rc;
+}
+
+
+int powerR2(int b,int n){
+  int rc=1;
+  if(n > 0){
+    rc = powerR2(b,n/2);
+    rc=rc*rc;
+    if(n%2){
+      rc=rc*b;
+    }
+  }
+  return rc;
+}
+
 /*return the nth fibonnaci number
   fib(0) is 0
   fib(1)  is 1
   fib(2) = fib(1) + fib(0) = 1
   fib(3) = fib(2) + fib(1) = 2
+  fib(n) = fib (n-1) + fib (n-2)
   ...
   */
 
 /*recursive version*/
 int fibR(int n){
-
+  int rc;
+  if(n == 0){
+    rc=0;
+  }
+  else if(n == 1){
+    rc=1;
+  }
+  else{
+    rc=fibR(n-1) + fibR(n-2);
+  }
+  return rc;
 }
 /*iterative version*/
 int fibI(int n){
-
+  int rc;
+  if(n == 0){
+    rc=0;
+  }
+  else if(n == 1){
+    rc=1;
+  }
+  else{  // n is 2 or higher
+    int prev=1;
+    int prevprev=0;
+    for(int i=2;i<=n;i++){
+      rc=prev+prevprev;
+      prevprev=prev;
+      prev=rc;
+    }
+  }
+  return rc;
+ 
 }
 
 
