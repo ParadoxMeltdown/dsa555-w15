@@ -42,7 +42,7 @@ int main(void){
 
 	strcpy(key.word_,"cat");
 	list.search(key,compare);
-
+	list.copyToArray(check,5);
     //list should now hold (in this order): cat,hamster,dog,mouse,rat
 	for(int i=0;i<5;i++){
 		cout << check[i] << " ";
