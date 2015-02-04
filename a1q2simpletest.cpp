@@ -30,11 +30,20 @@ int main(void){
 	for(int i=0;i<5;i++){
 		list.insert(data[i]);
 	}
+
+	list.copyToArray(check,5);
+	//list should hold (in this order): rat,hamster, mouse,cat, dog
+	for(int i=0;i<5;i++){
+		cout << check[i] << " ";
+	}
+	cout << endl;
+
+
 	Record key;
 	strcpy(key.word_,"hamster");
 	list.search(key,compare);
 	list.copyToArray(check,5);
-	//list should hold (in this order): hamster,dog,cat,mouse,rat
+	//list should hold (in this order): hasmter, rat, mouse,cat, dog
 	for(int i=0;i<5;i++){
 		cout << check[i] << " ";
 	}
@@ -43,7 +52,7 @@ int main(void){
 	strcpy(key.word_,"cat");
 	list.search(key,compare);
 	list.copyToArray(check,5);
-    //list should now hold (in this order): cat,hamster,dog,mouse,rat
+	//list should hold (in this order): cat, hamster,rat, mouse,dog
 	for(int i=0;i<5;i++){
 		cout << check[i] << " ";
 	}
