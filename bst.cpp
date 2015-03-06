@@ -15,6 +15,8 @@ struct Node{
 class BST{
 	Node* root_;
 	Node* searchR(int data,Node* subtreeroot);
+    void insertR(int data, Node*& subtreeroot);
+    Node* insertR2(int data, Node*& subtreeroot);
 public:
 	BST();
 	void insert(int data);
@@ -26,7 +28,43 @@ public:
 BST::BST(){
 	root_=nullptr;
 }
+/*
 void BST::insert(int data){
+	root_=insertR2(data,root_);
+}
+Node* BST::insertR2(int data, Node* subtreeroot){
+	Node* rc=subtreeroot;
+	if(!subtreeroot){
+		rc=new Node(data);
+	}
+	else{
+		if(data < subtreeroot->data){
+			subtreeroot->left_=insertR2(data,subtreeroot->left_);
+		}
+		else{
+			subtreeroot->right_=insertR2(data,subtreeroot->right_);			
+		}
+	}
+	return rc;
+}
+*/
+void BST::insert(int data){
+	insertR(data,root_);
+}
+void BST::insertR(int data, Node*& subtreeroot){
+	if(!subtreeroot){
+		subtreeroot=new Node(data);
+	}
+	else{
+		if(data < subtreeroot->data_){
+			insertR(data,subtreeroot->left_);
+		}
+		else{
+			insertR(data,subtreeroot->right_);
+		}
+	}
+}
+/*void BST::insert(int data){
 	if(root_){
 		Node* curr=root_;
 		bool found=false;
@@ -55,7 +93,7 @@ void BST::insert(int data){
 		root_=new Node(data);
 	}
 }
-
+*/
 Node* BST::search(int data){
 	Node* curr=root_;
 	while(curr && curr->data_ != data){
