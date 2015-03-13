@@ -10,15 +10,18 @@ public:
 	void pop();  //remove from stack
 	int search(const T& data);
 	void print();
+	bool isEmpty(){return count_==0;}
+	T top(){return data_[count_-1];}
 };
 
 template <class T>
-Stack<T>::Stack(int cap=50){
+Stack<T>::Stack(int cap){
 	data_=new T[cap];
 	max_=cap;
 	count_=0;
 }
 
+template <class T>
 void Stack<T>::grow(){
 	T* newBiggerArray=new T[max_*2];
 	for(int i=0;i<count_;i++){
@@ -37,10 +40,13 @@ void Stack<T>::push(const T& data){
 	data_[count_++]=data;
 }
 
+template <class T>
 void Stack<T>::pop(){
-	if(count>0)
+	if(count_>0)
 		count_--;
 }
+
+template <class T>
 void Stack<T>::print(){
 	for(int i=0;i<count_;i++){
 		cout << data_[i] << " ";

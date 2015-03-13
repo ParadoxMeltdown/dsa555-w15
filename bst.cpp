@@ -1,4 +1,6 @@
 #include<iostream>
+#include "queue.h"
+#include "stack.h"
 using namespace std;
 
 struct Node{
@@ -17,17 +19,105 @@ class BST{
 	Node* searchR(int data,Node* subtreeroot);
     void insertR(int data, Node*& subtreeroot);
     Node* insertR2(int data, Node*& subtreeroot);
+    void remove(int data, Node*& subtreeroot);
+    void print(Node* subtreeroot);
 public:
 	BST();
 	void insert(int data);
 	Node* search(int data);
+	Node* searchR(int data);
 	void remove(int data);
-	~BST();
+	void print();
+	void breadthFirstPrint();
+	void depthFirstPrint();
+	~BST(){}
 };
 
 BST::BST(){
 	root_=nullptr;
 }
+void BST::print(){
+	print(root_);
+}
+void BST::print(Node* subtreeroot){
+	if(subtreeroot){
+		print(subtreeroot->left_);
+		cout << subtreeroot->data_ <<endl;
+		print(subtreeroot->right_);
+	}
+}
+void BST::breadthFirstPrint(){
+    if(root_){
+		Queue<Node*> q;
+		q.enqueue(root_);
+		while(!q.isEmpty()){
+			Node* curr=q.front();
+			q.dequeue();
+			if(curr->left_){
+				q.enqueue(curr->left_);
+			}
+			if(curr->right_){
+				q.enqueue(curr->right_);
+			}
+			cout << curr->data_ << endl;
+		}
+    }
+}
+/*this function finds and removes node with data from the tree*/
+void BST::remove(int data){
+	remove(data,root_);
+}
+void BST::remove(int data, Node*& subtreeroot){
+	if(subtreeroot){
+		if(data == subtreeroot->data_){
+			/* remove it - unlink, and deallocate*/
+			if(subtreeroot->left_ && subtreeroot->right_){
+				//two children
+				Node* parentofIS=nullptr;
+				Node* inorderSuccessor=subtreeroot->right_;
+				Node* rm=subtreeroot;
+				while(inorderSuccessor->left_){
+					parentofIS=inorderSuccessor;
+					inorderSuccessor=inorderSuccessor->left_;
+				}
+				if(parentofIS){
+					parentofIS->left_=inorderSuccessor->right_;
+					inorderSuccessor->left_=subtreeroot->left_;
+					inorderSuccessor->right_=subtreeroot->right_;
+					subtreeroot=inorderSuccessor;
+				}
+				else{
+					//this only occurs if the inorder successor is
+					//the immediate right child of the node we are removing
+					inorderSuccessor->left_=subtreeroot->left_;
+					subtreeroot=inorderSuccessor;
+				}
+
+			}
+			else if(!subtreeroot->left_ && !subtreeroot->right_){
+				//no children
+				delete subtreeroot;
+				subtreeroot=nullptr;
+			}
+			else{
+				//one child
+				Node* rm = subtreeroot;
+				subtreeroot = (subtreeroot->left_)?
+				    (subtreeroot->left_):(subtreeroot->right_);
+				delete rm;
+			}
+		}
+		else{
+			if(data < subtreeroot->data_){
+				remove(data, subtreeroot->left_);
+			}
+			else { //data > subtreeroot->data_
+				remove(data, subtreeroot->right_);
+			}
+		}
+	}
+}
+
 /*
 void BST::insert(int data){
 	root_=insertR2(data,root_);
@@ -124,7 +214,39 @@ Node* BST::searchR(int data,Node* subtreeroot){
 	}
 	return rc;
 }
+//inorder Depth first print without recursion
+void BST::depthFirstPrint(){
+    if(root_){
+		Stack<Node*> s;
+		s.push(root_);
+		while(!s.isEmpty()){
+			Node* curr=s.top();
+			s.pop();
+			if(curr->left_){
+				s.push(curr->left_);
+			}
+			cout << curr->data_ << endl;
+			if(curr->right_){
+				s.push(curr->right_);
+			}
+		}
+    }	
+}
 
+int main(void){
+	BST tree;
+	tree.insert(10);
+	tree.insert(5);
+	tree.insert(15);
+	tree.insert(1);
+	tree.insert(12);
+	tree.insert(14);
+	tree.insert(16);
 
+//	tree.print();
+
+	tree.depthFirstPrint();
+
+}
 
 
