@@ -218,10 +218,10 @@ Node* BST::searchR(int data,Node* subtreeroot){
 void BST::depthFirstPrint(){
     if(root_){
 		Stack<Node*> s;
+		
 		s.push(root_);
 		while(!s.isEmpty()){
 			Node* curr=s.top();
-			s.pop();
 			if(curr->left_){
 				s.push(curr->left_);
 			}
