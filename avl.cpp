@@ -23,7 +23,7 @@ class AVL{
 	  with root at subtreeroot.  It returns a 1 if
 	  the tree got taller as a result of the insertion*/
     int insertR(int data, Node*& subtreeroot);
-    void print(Node* subtreeroot);
+    void print(Node* subtreeroot,int lvl);
     void rotateLeft(Node*& root);
     void rotateRight(Node*& root);
 public:
@@ -45,18 +45,27 @@ void AVL::rotateLeft(Node*& root){
 	root_=B;
 }
 void AVL::rotateRight(Node*& root){
+	Node* A=root;
+	Node* B=root->left_;
+	Node* Y=B->right_;
+	B->right_=A;
+	A->left_=Y;
+	root_=B;
 }
 AVL::AVL(){
 	root_=nullptr;
 }
 void AVL::print(){
-	print(root_);
+	print(root_,0);
 }
-void AVL::print(Node* subtreeroot){
+void AVL::print(Node* subtreeroot,int lvl){
 	if(subtreeroot){
-		print(subtreeroot->left_);
-		cout << subtreeroot->data_ <<endl;
-		print(subtreeroot->right_);
+		print(subtreeroot->left_,lvl+1);
+		for(int i=0;i<lvl+1;i++){
+			cout << "--";
+		}
+		cout << ">" << subtreeroot->data_ <<endl;
+		print(subtreeroot->right_,lvl+1);
 	}
 }
 void AVL::breadthFirstPrint(){
@@ -81,7 +90,7 @@ void AVL::breadthFirstPrint(){
 void AVL::insert(int data){
 	insertR(data,root_);
 }
-void AVL::insertR(int data, Node*& subtreeroot){
+int AVL::insertR(int data, Node*& subtreeroot){
 	int rc;
 	if(!subtreeroot){
 		subtreeroot=new Node(data);
@@ -93,12 +102,21 @@ void AVL::insertR(int data, Node*& subtreeroot){
 			result=insertR(data,subtreeroot->left_);
 			if(result==1){
 				subtreeroot->heightBalance_-=1;
-				if(subtreeroot->heightBalance==-2){
+				if(subtreeroot->heightBalance_==-2){
 					if(subtreeroot->left_->heightBalance_ < 0){
+						rotateRight(subtreeroot);
+						subtreeroot->heightBalance_=0;
+						subtreeroot->left_->heightBalance_=0;
+						subtreeroot->right_->heightBalance_=0;
+						rc=0;
+					}
+					else{
+						//double rotation
+						rotateLeft(subtreeroot->left_);
 						rotateRight(subtreeroot);
 					}
 				}
-				else if(subtreeroot->heightBalance==-1)
+				else if(subtreeroot->heightBalance_==-1){
 					rc=1;
 				}
 				else{
@@ -109,8 +127,33 @@ void AVL::insertR(int data, Node*& subtreeroot){
 		}
 		else{
 			result=insertR(data,subtreeroot->right_);
+			if(result==1){
+				subtreeroot->heightBalance_+=1;
+				if(subtreeroot->heightBalance_==2){
+					if(subtreeroot->left_->heightBalance_ > 0){
+						rotateLeft(subtreeroot);
+						subtreeroot->heightBalance_=0;
+						subtreeroot->left_->heightBalance_=0;
+						subtreeroot->right_->heightBalance_=0;
+						rc=0;
+					}
+					else{
+						//double rotation
+						rotateRight(subtreeroot->right_);
+						rotateLeft(subtreeroot);
+					}
+				}
+				else if(subtreeroot->heightBalance_==1){
+					rc=1;
+				}
+				else{
+					rc=0;
+				}
+			}
+
 		}
 	}
+	return rc;
 }
 
 Node* AVL::search(int data){
@@ -130,15 +173,11 @@ Node* AVL::search(int data){
 int main(void){
 	AVL tree;
 	tree.insert(10);
-	tree.insert(5);
-	tree.insert(15);
-	tree.insert(1);
-	tree.insert(12);
-	tree.insert(14);
-	tree.insert(16);
-
+	tree.insert(20);
 	tree.print();
-
+	tree.insert(30);
+	cout << "*********************" << endl;
+	tree.print();
 //	tree.depthFirstPrint();
 
 }
