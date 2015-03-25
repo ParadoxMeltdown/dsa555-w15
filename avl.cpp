@@ -104,10 +104,10 @@ int AVL::insertR(int data, Node*& subtreeroot){
 				subtreeroot->heightBalance_-=1;
 				if(subtreeroot->heightBalance_==-2){
 					if(subtreeroot->left_->heightBalance_ < 0){
-						rotateRight(subtreeroot);
 						subtreeroot->heightBalance_=0;
 						subtreeroot->left_->heightBalance_=0;
-						subtreeroot->right_->heightBalance_=0;
+						subtreeroot->left_->left_->heightBalance_=0;
+						rotateRight(subtreeroot);
 						rc=0;
 					}
 					else{
@@ -131,10 +131,11 @@ int AVL::insertR(int data, Node*& subtreeroot){
 				subtreeroot->heightBalance_+=1;
 				if(subtreeroot->heightBalance_==2){
 					if(subtreeroot->right_->heightBalance_ > 0){
-						rotateLeft(subtreeroot);
 						subtreeroot->heightBalance_=0;
-						subtreeroot->left_->heightBalance_=0;
 						subtreeroot->right_->heightBalance_=0;
+						subtreeroot->right_->right_->heightBalance_=0;
+
+						rotateLeft(subtreeroot);
 						rc=0;
 					}
 					else{
